@@ -4,17 +4,17 @@ on:
   schedule:
     # Executa todos os dias às 03:00 AM (Horário de Brasília / 06:00 UTC)
     - cron: '0 6 * * *'
-  workflow_dispatch: # Libera o botão de testes manuais no painel do GitHub
+  workflow_dispatch: # Permite rodar o teste manual pelo painel
 
 jobs:
   rodar-script:
     runs-on: ubuntu-latest
     steps:
       - name: Baixar codigo do repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # Versao moderna para Node.js 24
 
       - name: Configurar Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5  # Versao moderna para Node.js 24
         with:
           python-version: '3.10'
 
@@ -22,8 +22,11 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Executar Automação Financeira
+      - name: Executar Automacao Financeira
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          EMAIL_REMETENTE: ${{ secrets.EMAIL_REMETENTE }}
+          EMAIL_SENHA: ${{ secrets.EMAIL_SENHA }}
+          EMAIL_DESTINATARIO: ${{ secrets.EMAIL_DESTINATARIO }}
         run: python atualizar_vencimentos.py
