@@ -1,0 +1,29 @@
+name: Rotina Diaria - Contas Vencidas
+
+on:
+  schedule:
+    # Executa todos os dias às 03:00 AM (Horário de Brasília / 06:00 UTC)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Libera o botão de testes manuais no painel do GitHub
+
+jobs:
+  rodar-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar codigo do repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+
+      - name: Executar Automação Financeira
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: python atualizar_vencimentos.py
